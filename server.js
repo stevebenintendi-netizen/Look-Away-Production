@@ -29,6 +29,10 @@ const createTransporter = () => {
     host: SMTP_HOST,
     port: Number(SMTP_PORT),
     secure: SMTP_SECURE === 'true',
+    requireTLS: SMTP_SECURE !== 'true',
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 20000,
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
 };
@@ -40,7 +44,7 @@ app.post('/api/send-report', async (request, response) => {
   const transporter = createTransporter();
 
   if (!transporter || !process.env.SMTP_FROM) {
-    return response.status(503).json({ error: 'SMTP email delivery is not configured.' });
+    return response.status(503).json({ error: 'GMass SMTP is not configured. Set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, and SMTP_FROM.' });
   }
   if (!report || !recipients.length) {
     return response.status(400).json({ error: 'A report and at least one recipient are required.' });
@@ -76,8 +80,14 @@ app.post('/api/send-report', async (request, response) => {
     });
     return response.json({ sent: true });
   } catch (error) {
-    console.error('SMTP report delivery failed:', error);
-    return response.status(502).json({ error: 'The report email could not be sent.' });
+    const message = error instanceof Error ? error.message : 'Unknown email delivery error.';
+    console.error('GMass SMTP report delivery failed:', {
+      code: error?.code,
+      command: error?.command,
+      responseCode: error?.responseCode,
+      message,
+    });
+    return response.status(502).json({ error: `Email delivery failed: ${message}` });
   }
 });
 

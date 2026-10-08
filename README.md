@@ -30,7 +30,7 @@ The primary report email is saved as the user's default in Supabase and remains 
 3. Configure email confirmation in Supabase Authentication, then sign up through the app and confirm the email before logging in.
 4. Add the SMTP values in `.env` so report delivery is enabled.
 
-To configure email delivery, copy `.env.example` to `.env` and replace the placeholders with the SMTP credentials from your GMass account. Keep `.env` private and run the app with `npm run dev` or `npm start`.
+To configure email delivery, copy `.env.example` to `.env` and replace the placeholders with your GMass SMTP credentials. Set the same `SMTP_*` variables in Render and redeploy. The default configuration uses `smtp.gmass.co` on port `587` with STARTTLS. Keep `.env` private and run the app with `npm run dev` or `npm start`. If Render cannot connect to the GMass SMTP host, check the server logs for the exact SMTP error and ask Render support whether outbound port 587 is enabled for your service.
 
 The same React bundle is used for the web app, Android, and iOS through Capacitor. Deploy the server to a public HTTPS URL, set `VITE_API_BASE_URL` to that URL before `npm run cap:sync`, and then build the native apps. Leave it empty for web deployments served by this server.
 
