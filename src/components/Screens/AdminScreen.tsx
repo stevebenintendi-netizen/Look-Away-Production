@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Download, Eye, LockKeyhole, LogOut, ShieldCheck, Users } from 'lucide-react';
 import { AdminUserRecord, EngagementRecord, ReportRecord } from '../../types';
+import { getLocalDateInputValue } from '../../lib/date';
 
 interface AdminScreenProps {
   users: AdminUserRecord[];
@@ -30,7 +31,7 @@ export function AdminScreen({ users, engagements, reports, onLogout }: AdminScre
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `lookaway-admin-export-${new Date().toISOString().slice(0, 10)}.json`;
+    link.download = `lookaway-admin-export-${getLocalDateInputValue()}.json`;
     link.click();
     URL.revokeObjectURL(url);
   };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { UserProfile } from '../../types';
 import { TriggerEntry } from '../../types';
 import { TriggersScreen } from './TriggersScreen';
+import { getLocalDateInputValue } from '../../lib/date';
 import {
   ArrowLeft,
   Check,
@@ -47,10 +48,10 @@ export function CreateReportScreen({
     setSelectedPeriod(period);
     if (period !== 'CUSTOM RANGE') {
       const days = period === 'LAST 30 DAYS' ? 30 : period === 'LAST 90 DAYS' ? 90 : 7;
-      const periodEnd = new Date(endDate || new Date().toISOString().slice(0, 10));
+      const periodEnd = new Date(`${endDate || getLocalDateInputValue()}T00:00:00`);
       const periodStart = new Date(periodEnd);
       periodStart.setDate(periodEnd.getDate() - days + 1);
-      onUpdateDates(periodStart.toISOString().slice(0, 10), periodEnd.toISOString().slice(0, 10));
+      onUpdateDates(getLocalDateInputValue(periodStart), getLocalDateInputValue(periodEnd));
     }
   };
 

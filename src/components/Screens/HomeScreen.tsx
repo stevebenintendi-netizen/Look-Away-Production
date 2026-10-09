@@ -24,13 +24,7 @@ export function HomeScreen({
     ? (engagements.reduce((sum, e) => sum + (e.score || 2), 0) / totalLogged).toFixed(1)
     : '2.4';
 
-  const lastRecord = engagements[0] || {
-    dateStr: formatLocalDate(new Date()),
-    timeStr: '2:45 PM',
-    score: 2,
-    scoreLabel: '2 – LOOK',
-    locations: ['Driving', 'On Phone'],
-  };
+  const lastRecord = engagements[0];
 
   return (
     <div className="w-full h-full min-h-[560px] max-w-[380px] mx-auto p-3.5 sm:p-4 flex flex-col justify-between select-none">
@@ -126,12 +120,14 @@ export function HomeScreen({
         >
           <div className="flex items-center justify-between text-[9.5px] uppercase font-bold tracking-wider text-[#b9b7ad]">
             <span>
-              LAST ENGAGEMENT: {lastRecord.dateStr?.toUpperCase() || formatLocalDate(new Date()).toUpperCase()} • {lastRecord.timeStr || '2:45 PM'}
+              {lastRecord
+                ? `LAST ENGAGEMENT: ${(lastRecord.dateStr || formatLocalDate(new Date(lastRecord.timestamp))).toUpperCase()} • ${lastRecord.timeStr || new Date(lastRecord.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`
+                : 'NO ENGAGEMENTS LOGGED YET'}
             </span>
           </div>
           <div className="flex items-center justify-between mt-1 text-xs">
             <span className="font-semibold text-[#f7f4e8] truncate pr-2">
-              {lastRecord.scoreLabel || '2 – LOOK'} • {lastRecord.locations?.join(', ') || 'Driving, On Phone'}
+              {lastRecord ? `${lastRecord.scoreLabel} • ${lastRecord.locations.join(', ')}` : 'Your real engagement history will appear here.'}
             </span>
             <span className="text-[#f1ca63] font-bold text-[11px] shrink-0 flex items-center gap-0.5 hover:underline">
               VIEW <ArrowRight className="w-3 h-3" />

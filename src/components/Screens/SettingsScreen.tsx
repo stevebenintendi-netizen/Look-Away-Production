@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserProfile, EngagementRecord } from '../../types';
 import { GoldDivider } from '../GoldDivider';
+import { getLocalDateInputValue } from '../../lib/date';
 import {
   User,
   Shield,
@@ -63,7 +64,7 @@ export function SettingsScreen({
     const jsonStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
     const link = document.createElement('a');
     link.setAttribute('href', jsonStr);
-    link.setAttribute('download', `look-away-backup-${new Date().toISOString().slice(0, 10)}.json`);
+    link.setAttribute('download', `look-away-backup-${getLocalDateInputValue()}.json`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
