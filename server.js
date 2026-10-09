@@ -44,7 +44,7 @@ app.post('/api/send-report', async (request, response) => {
   const transporter = createTransporter();
 
   if (!transporter || !process.env.SMTP_FROM) {
-    return response.status(503).json({ error: 'GMass SMTP is not configured. Set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, and SMTP_FROM.' });
+    return response.status(503).json({ error: 'Gmail SMTP is not configured. Set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, and SMTP_FROM.' });
   }
   if (!report || !recipients.length) {
     return response.status(400).json({ error: 'A report and at least one recipient are required.' });
@@ -81,7 +81,7 @@ app.post('/api/send-report', async (request, response) => {
     return response.json({ sent: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown email delivery error.';
-    console.error('GMass SMTP report delivery failed:', {
+    console.error('Gmail SMTP report delivery failed:', {
       code: error?.code,
       command: error?.command,
       responseCode: error?.responseCode,

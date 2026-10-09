@@ -21,7 +21,9 @@ View your app in AI Studio: https://ai.studio/apps/c127550e-b3c8-4a9f-a6e0-f9fb0
 
 ## Reports
 
-The primary report email is saved as the user's default in Supabase and remains prefilled until changed. The optional secondary email is used only for the current report and starts blank on the next report. Reports are saved in Supabase and sent through the server's GMass SMTP connection.
+The primary report email is saved as the user's default in Supabase and remains prefilled until changed. The optional secondary email is used only for the current report and starts blank on the next report. Reports are saved in Supabase and sent through the server's Gmail SMTP connection.
+
+Reference sample engagements use the current local date; saved engagement and report dates continue to reflect when they were actually created.
 
 ## Supabase
 
@@ -30,7 +32,7 @@ The primary report email is saved as the user's default in Supabase and remains 
 3. Configure email confirmation in Supabase Authentication, then sign up through the app and confirm the email before logging in.
 4. Add the SMTP values in `.env` so report delivery is enabled.
 
-To configure email delivery, copy `.env.example` to `.env` and replace the placeholders with your GMass SMTP credentials. Set the same `SMTP_*` variables in Render and redeploy. The default configuration uses `smtp.gmass.co` on port `587` with STARTTLS. Keep `.env` private and run the app with `npm run dev` or `npm start`. If Render cannot connect to the GMass SMTP host, check the server logs for the exact SMTP error and ask Render support whether outbound port 587 is enabled for your service.
+To configure email delivery, copy `.env.example` to `.env` and set your Gmail address and app password. Set the same `SMTP_*` variables in Render and redeploy. The default configuration uses `smtp.gmail.com` on port `465` with SSL/TLS. Keep `.env` private and run the app with `npm run dev` or `npm start`. If Render cannot connect to Gmail, check the server logs for the exact SMTP error and ask Render support whether outbound SMTP on port 465 is enabled for your service.
 
 The same React bundle is used for the web app, Android, and iOS through Capacitor. Deploy the server to a public HTTPS URL, set `VITE_API_BASE_URL` to that URL before `npm run cap:sync`, and then build the native apps. Leave it empty for web deployments served by this server.
 

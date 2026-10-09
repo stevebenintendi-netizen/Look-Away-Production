@@ -40,10 +40,9 @@ export function EngagementsListScreen({
           <div className="w-5" />
         </div>
 
-        {/* Date Range Subtitle */}
         <div className="text-center pb-2">
           <p className="text-[11px] sm:text-xs text-[#8c8c88] font-medium tracking-wide m-0">
-            Apr 24 – May 24, 2025
+            All logged engagements
           </p>
         </div>
 

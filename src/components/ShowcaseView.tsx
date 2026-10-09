@@ -18,6 +18,7 @@ import { ReportSummaryScreen } from './Screens/ReportSummaryScreen';
 import { EngagementsListScreen } from './Screens/EngagementsListScreen';
 import { EngagementDetailScreen } from './Screens/EngagementDetailScreen';
 import { SettingsScreen } from './Screens/SettingsScreen';
+import { formatLocalDate, getLocalDateInputValue } from '../lib/date';
 import {
   Maximize2,
   Smartphone,
@@ -133,6 +134,7 @@ export function ShowcaseView({
 }: ShowcaseViewProps) {
   const [activeCategory, setActiveCategory] = useState<ScreenCategory>('all');
   const [inspectIndex, setInspectIndex] = useState<number | null>(null);
+  const today = getLocalDateInputValue();
 
   // Pre-populated demo review draft matching design reference
   const demoReviewDraft: NewEngagementDraft = {
@@ -153,10 +155,11 @@ export function ShowcaseView({
     triggers: [],
   };
 
+  const sampleDate = new Date();
   const sampleEngagement = engagements[0] || {
     id: 'eng-sample-1',
-    timestamp: new Date().toISOString(),
-    dateStr: 'May 24, 2025',
+    timestamp: sampleDate.toISOString(),
+    dateStr: formatLocalDate(sampleDate),
     timeStr: '10:15 AM',
     score: 2,
     scoreLabel: '2 – LOOK',
@@ -374,8 +377,8 @@ export function ShowcaseView({
       render: () => (
         <CreateReportScreen
           user={user}
-          startDate="2025-04-24"
-          endDate="2025-05-24"
+          startDate={today}
+          endDate={today}
           onUpdateDates={() => {}}
           onGenerateReport={() => onOpenScreenInSimulator('report_summary')}
           onBack={() => onOpenScreenInSimulator('home')}
@@ -392,8 +395,8 @@ export function ShowcaseView({
           user={user}
           engagements={engagements}
           onCreateReport={() => onOpenScreenInSimulator('create_report')}
-          startDate="2025-04-24"
-          endDate="2025-05-24"
+          startDate={today}
+          endDate={today}
           onBack={() => onOpenScreenInSimulator('create_report')}
           onViewEngagements={() => onOpenScreenInSimulator('engagements_list')}
           onSelectEngagement={() => onOpenScreenInSimulator('engagement_detail')}

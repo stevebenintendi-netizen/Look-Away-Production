@@ -1,4 +1,5 @@
 import { EngagementRecord, ScoreOption, UserProfile } from '../types';
+import { formatLocalDate } from '../lib/date';
 
 export const TRIGGER_OPTIONS = [
   'STRESSED',
@@ -115,11 +116,21 @@ export const HAIR_OPTIONS = [
   { id: 'other', label: 'OTHER', color: '#765B24', bgClass: 'bg-[#765B24]' },
 ];
 
-export const INITIAL_ENGAGEMENTS: EngagementRecord[] = [
+const SAMPLE_DATE = new Date();
+
+const sampleDateAt = (hours: number, minutes: number) => {
+  const date = new Date(SAMPLE_DATE);
+  date.setHours(hours, minutes, 0, 0);
+  return {
+    timestamp: date.toISOString(),
+    dateStr: formatLocalDate(date),
+  };
+};
+
+const SAMPLE_ENGAGEMENTS: EngagementRecord[] = [
   {
     id: 'eng-1',
-    timestamp: '2025-05-24T10:15:00.000Z',
-    dateStr: 'May 24, 2025',
+    ...sampleDateAt(10, 15),
     timeStr: '10:15 AM',
     score: 2,
     scoreLabel: '2 – LOOK',
@@ -134,8 +145,7 @@ export const INITIAL_ENGAGEMENTS: EngagementRecord[] = [
   },
   {
     id: 'eng-2',
-    timestamp: '2025-05-23T18:45:00.000Z',
-    dateStr: 'May 23, 2025',
+    ...sampleDateAt(18, 45),
     timeStr: '6:45 PM',
     score: 3,
     scoreLabel: '3 – PROLONGED LOOK',
@@ -150,8 +160,7 @@ export const INITIAL_ENGAGEMENTS: EngagementRecord[] = [
   },
   {
     id: 'eng-3',
-    timestamp: '2025-05-23T13:20:00.000Z',
-    dateStr: 'May 23, 2025',
+    ...sampleDateAt(13, 20),
     timeStr: '1:20 PM',
     score: 1,
     scoreLabel: '1 – SEE',
@@ -166,8 +175,7 @@ export const INITIAL_ENGAGEMENTS: EngagementRecord[] = [
   },
   {
     id: 'eng-4',
-    timestamp: '2025-05-22T08:30:00.000Z',
-    dateStr: 'May 22, 2025',
+    ...sampleDateAt(8, 30),
     timeStr: '8:30 AM',
     score: 2,
     scoreLabel: '2 – LOOK',
@@ -182,8 +190,7 @@ export const INITIAL_ENGAGEMENTS: EngagementRecord[] = [
   },
   {
     id: 'eng-5',
-    timestamp: '2025-05-21T19:10:00.000Z',
-    dateStr: 'May 21, 2025',
+    ...sampleDateAt(19, 10),
     timeStr: '7:10 PM',
     score: 4,
     scoreLabel: '4 – LOOK WITH LONGING',
@@ -198,8 +205,7 @@ export const INITIAL_ENGAGEMENTS: EngagementRecord[] = [
   },
   {
     id: 'eng-6',
-    timestamp: '2025-05-21T12:05:00.000Z',
-    dateStr: 'May 21, 2025',
+    ...sampleDateAt(12, 5),
     timeStr: '12:05 PM',
     score: 2,
     scoreLabel: '2 – LOOK',
@@ -214,11 +220,15 @@ export const INITIAL_ENGAGEMENTS: EngagementRecord[] = [
   },
 ];
 
+export const INITIAL_ENGAGEMENTS = SAMPLE_ENGAGEMENTS.sort(
+  (first, second) => second.timestamp.localeCompare(first.timestamp)
+);
+
 export const INITIAL_USER: UserProfile = {
   name: 'John Doe',
   phone: '(555) 234-5678',
   email: 'john.doe@example.com',
   accountabilityEmail: 'mentor.smith@example.com',
   isRegistered: true,
-  joinedDate: 'May 1, 2025',
+  joinedDate: formatLocalDate(SAMPLE_DATE),
 };

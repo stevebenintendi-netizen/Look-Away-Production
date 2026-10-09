@@ -33,6 +33,7 @@ import { SettingsScreen } from './components/Screens/SettingsScreen';
 import { TriggersScreen } from './components/Screens/TriggersScreen';
 import { AdminScreen } from './components/Screens/AdminScreen';
 import { requireSupabase, supabase } from './lib/supabase';
+import { getLocalDateInputValue } from './lib/date';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 
@@ -116,6 +117,7 @@ const reportFromRow = (row: any): ReportRecord => ({
 });
 
 export default function App() {
+  const today = getLocalDateInputValue();
   const [user, setUser] = useState<UserProfile>(INITIAL_USER);
 
   // Auth State
@@ -134,8 +136,8 @@ export default function App() {
   );
   const [selectedEngagement, setSelectedEngagement] = useState<EngagementRecord>(EMPTY_ENGAGEMENT);
 
-  const [startDate, setStartDate] = useState<string>('2025-04-24');
-  const [endDate, setEndDate] = useState<string>('2025-05-24');
+  const [startDate, setStartDate] = useState<string>(today);
+  const [endDate, setEndDate] = useState<string>(today);
   const [lastReport, setLastReport] = useState<ReportRecord | null>(null);
   const [reports, setReports] = useState<ReportRecord[]>([]);
   const [adminUsers] = useState<AdminUserRecord[]>([]);

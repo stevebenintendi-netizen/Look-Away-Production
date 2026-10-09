@@ -1,5 +1,6 @@
 import { MainLogo } from '../LionCrest';
 import { UserProfile, EngagementRecord, ReportRecord, TriggerEntry } from '../../types';
+import { getLocalDateInputValue } from '../../lib/date';
 import {
   ArrowLeft,
   ChevronRight,
@@ -64,8 +65,8 @@ export function ReportSummaryScreen({
   onBack,
   onCreateReport,
   onViewEngagements,
-  startDate = '2025-04-24',
-  endDate = '2025-05-24',
+  startDate = getLocalDateInputValue(),
+  endDate = getLocalDateInputValue(),
   reports = [],
   generalComments = '',
   triggerEntries = [],

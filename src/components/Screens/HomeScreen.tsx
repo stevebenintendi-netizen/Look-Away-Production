@@ -1,6 +1,7 @@
 import { MainLogo } from '../LionCrest';
 import { UserProfile, EngagementRecord } from '../../types';
 import { PlusCircle, FileText, Shield, ArrowRight } from 'lucide-react';
+import { formatLocalDate } from '../../lib/date';
 
 interface HomeScreenProps {
   user: UserProfile;
@@ -24,7 +25,7 @@ export function HomeScreen({
     : '2.4';
 
   const lastRecord = engagements[0] || {
-    dateStr: 'May 21, 2025',
+    dateStr: formatLocalDate(new Date()),
     timeStr: '2:45 PM',
     score: 2,
     scoreLabel: '2 – LOOK',
@@ -125,7 +126,7 @@ export function HomeScreen({
         >
           <div className="flex items-center justify-between text-[9.5px] uppercase font-bold tracking-wider text-[#b9b7ad]">
             <span>
-              LAST ENGAGEMENT: {lastRecord.dateStr?.toUpperCase() || 'MAY 21, 2025'} • {lastRecord.timeStr || '2:45 PM'}
+              LAST ENGAGEMENT: {lastRecord.dateStr?.toUpperCase() || formatLocalDate(new Date()).toUpperCase()} • {lastRecord.timeStr || '2:45 PM'}
             </span>
           </div>
           <div className="flex items-center justify-between mt-1 text-xs">
