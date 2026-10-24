@@ -7,7 +7,6 @@ import {
   Shield,
   Download,
   Upload,
-  RotateCcw,
   Trash2,
   CheckCircle2,
   LogOut,
@@ -18,7 +17,6 @@ interface SettingsScreenProps {
   user: UserProfile;
   engagements: EngagementRecord[];
   onSaveProfile: (profile: UserProfile) => void;
-  onResetSampleData: () => void;
   onClearAllData: () => void;
   onImportData: (engagements: EngagementRecord[]) => void;
   onLogout?: () => void;
@@ -28,7 +26,6 @@ export function SettingsScreen({
   user,
   engagements,
   onSaveProfile,
-  onResetSampleData,
   onClearAllData,
   onImportData,
   onLogout,
@@ -36,9 +33,7 @@ export function SettingsScreen({
   const [name, setName] = useState(user.name);
   const [phone, setPhone] = useState(user.phone);
   const [email, setEmail] = useState(user.email);
-  const [accountabilityEmail, setAccountabilityEmail] = useState(
-    user.accountabilityEmail || 'mentor@example.com'
-  );
+  const [accountabilityEmail, setAccountabilityEmail] = useState(user.accountabilityEmail);
   const [savedToast, setSavedToast] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
@@ -194,7 +189,7 @@ export function SettingsScreen({
           </button>
           <div className="flex items-center gap-1.5 text-xs text-[#b9b7ad]">
             <UserCheck className="w-3.5 h-3.5 text-[#f1ca63]" />
-            <span className="text-right">Active account: <strong className="text-[#f1ca63] block sm:inline">{name || 'John Doe'}</strong></span>
+            <span className="text-right">Active account: <strong className="text-[#f1ca63] block sm:inline">{name || 'Account'}</strong></span>
           </div>
         </div>
       </form>
@@ -207,7 +202,7 @@ export function SettingsScreen({
         </h3>
 
         <div className="text-xs text-[#b9b7ad] leading-relaxed">
-          A JSON backup is a portable text file containing your profile and engagement history. Export it to keep a backup, then import it on another device or after reinstalling. Sample data is fictional reference data for exploring the app; it can be reset or cleared at any time.
+          A JSON backup contains your profile and engagement history. Export it to keep a backup, then import it on another device or after reinstalling.
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -230,15 +225,6 @@ export function SettingsScreen({
               className="hidden"
             />
           </label>
-
-          <button
-            type="button"
-            onClick={onResetSampleData}
-            className="btn-dark py-2.5 px-4 rounded text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer hover:border-[#eab308]"
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-[#f1ca63]" strokeWidth={1.5} />
-            Reset Sample Data
-          </button>
 
           <button
             type="button"

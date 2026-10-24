@@ -439,7 +439,6 @@ export function ShowcaseView({
           user={user}
           engagements={engagements}
           onSaveProfile={onSaveProfile || (() => {})}
-          onResetSampleData={() => {}}
           onClearAllData={() => {}}
           onImportData={() => {}}
         />

@@ -35,6 +35,7 @@ interface ReportsDashboardProps {
   onSetDates: (start: string, end: string) => void;
   onSelectNewEngagement: () => void;
   onDeleteEngagement: (id: string) => void;
+  onEmailReport: () => Promise<void>;
 }
 
 export function ReportsDashboard({
@@ -45,12 +46,14 @@ export function ReportsDashboard({
   onSetDates,
   onSelectNewEngagement,
   onDeleteEngagement,
+  onEmailReport,
 }: ReportsDashboardProps) {
   const [selectedId, setSelectedId] = useState<string | null>(
     engagements[0]?.id || null
   );
   const [filterScore, setFilterScore] = useState<number | 'all'>('all');
-  const [emailSentToast, setEmailSentToast] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<'sent' | 'error' | null>(null);
+  const [emailSending, setEmailSending] = useState(false);
   const [mobileTab, setMobileTab] = useState<'summary' | 'logs' | 'detail'>('summary');
 
   // Filter engagements by date and score
@@ -160,18 +163,27 @@ export function ReportsDashboard({
     document.body.removeChild(link);
   };
 
-  const handleSendEmail = () => {
-    setEmailSentToast(true);
-    setTimeout(() => setEmailSentToast(false), 4000);
+  const handleSendEmail = async () => {
+    setEmailSending(true);
+    setEmailStatus(null);
+    try {
+      await onEmailReport();
+      setEmailStatus('sent');
+    } catch (error) {
+      setEmailStatus('error');
+      window.alert(`Report was not sent: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setEmailSending(false);
+    }
   };
 
   return (
     <div className="w-full max-w-[1180px] mx-auto p-2 sm:p-4 text-[#f7f4e8]">
       {/* Toast Notification */}
-      {emailSentToast && (
+      {emailStatus && (
         <div className="fixed top-6 right-6 z-50 bg-[#f1ca63] text-[#030814] px-5 py-3 rounded-lg font-black text-xs shadow-2xl flex items-center gap-2 border border-[#fff]">
-          <CheckCircle2 className="w-5 h-5 text-[#030814]" />
-          <span>Accountability Report dispatched to {user.accountabilityEmail || user.email}!</span>
+          {emailStatus === 'sent' && <CheckCircle2 className="w-5 h-5 text-[#030814]" />}
+          <span>{emailStatus === 'sent' ? `Accountability report sent to ${user.accountabilityEmail || user.email}.` : 'Report email was not sent.'}</span>
         </div>
       )}
 
@@ -254,10 +266,11 @@ export function ReportsDashboard({
             type="button"
             id="report-email-mentor-btn"
             onClick={handleSendEmail}
+            disabled={emailSending}
             className="btn-gold px-3 sm:px-4 py-1.5 rounded text-[10px] sm:text-xs font-bold tracking-wider uppercase flex items-center gap-1 cursor-pointer shadow-md"
           >
             <Mail className="w-3.5 h-3.5 text-[#090d10]" strokeWidth={1.5} />
-            EMAIL
+            {emailSending ? 'SENDING' : 'EMAIL'}
           </button>
         </div>
       </div>

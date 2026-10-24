@@ -34,8 +34,12 @@ import { TriggersScreen } from './components/Screens/TriggersScreen';
 import { AdminScreen } from './components/Screens/AdminScreen';
 import { requireSupabase, supabase } from './lib/supabase';
 import { getLocalDateInputValue } from './lib/date';
+import { Capacitor } from '@capacitor/core';
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL ||
+  (Capacitor.isNativePlatform() ? 'https://look-away.onrender.com' : '')
+).replace(/\/$/, '');
 
 const EMPTY_DRAFT: NewEngagementDraft = {
   score: null,
@@ -84,7 +88,7 @@ const profileFromRow = (row: any, email: string): UserProfile => ({
   email,
   accountabilityEmail: row?.accountability_email || '',
   isRegistered: true,
-  joinedDate: row?.joined_date || new Date().toLocaleDateString('en-US'),
+  joinedDate: row?.joined_date || '',
 });
 
 const engagementFromRow = (row: any): EngagementRecord => ({
@@ -399,12 +403,6 @@ export default function App() {
         }
         setEngagements((prev) => prev.filter((e) => e.id !== id));
       });
-    }
-  };
-
-  const handleResetSampleData = () => {
-    if (window.confirm('Reset data to the reference sample engagements?')) {
-      alert('Sample data is no longer available for real accounts.');
     }
   };
 
@@ -731,6 +729,41 @@ export default function App() {
             }}
             onSelectNewEngagement={handleStartLogging}
             onDeleteEngagement={handleDeleteEngagement}
+            onEmailReport={async () => {
+              const client = requireSupabase();
+              const { data: authData, error: authError } = await client.auth.getUser();
+              if (authError || !authData.user) throw authError || new Error('You are not signed in.');
+
+              const reportInput = {
+                start_date: startDate,
+                end_date: endDate,
+                email_to_send: user.accountabilityEmail || user.email,
+                secondary_email_to_send: '',
+                phone_to_send: user.phone,
+                general_comments: '',
+                triggers: engagements.flatMap((engagement) => engagement.triggers || []),
+              };
+              if (!reportInput.email_to_send) throw new Error('Add an email address in Settings before sending a report.');
+
+              const { data, error } = await client.from('reports').insert({
+                ...reportInput,
+                user_id: authData.user.id,
+              }).select().single();
+              if (error) throw error;
+
+              const report = reportFromRow(data);
+              const response = await fetch(`${API_BASE_URL}/api/send-report`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ report, user }),
+              });
+              if (!response.ok) {
+                const body = await response.json().catch(() => ({}));
+                throw new Error(body.error || 'The report email could not be sent.');
+              }
+              setLastReport(report);
+              setReports((previous) => [report, ...previous]);
+            }}
           />
         );
 
@@ -740,7 +773,6 @@ export default function App() {
             user={user}
             engagements={engagements}
             onSaveProfile={handleSaveProfile}
-            onResetSampleData={handleResetSampleData}
             onClearAllData={handleClearAllData}
             onImportData={handleImportData}
             onLogout={handleLogout}

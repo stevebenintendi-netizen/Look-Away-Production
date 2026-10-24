@@ -16,18 +16,18 @@ export function RegisterScreen({
   onContinue,
 }: RegisterScreenProps) {
   const [tab, setTab] = useState<'login' | 'signup'>('login');
-  const [email, setEmail] = useState(user.email || 'john.doe@example.com');
-  const [pin, setPin] = useState(user.pin || '1234');
+  const [email, setEmail] = useState(user.email);
+  const [pin, setPin] = useState(user.pin || '');
   const [showPin, setShowPin] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSaveProfile({
       ...user,
-      name: user.name || 'John Doe',
-      phone: user.phone || '(555) 234-5678',
-      email: email.trim() || 'john.doe@example.com',
-      pin: '1234',
+      name: user.name,
+      phone: user.phone,
+      email: email.trim(),
+      pin,
       isRegistered: true,
     });
     onContinue();
@@ -93,7 +93,7 @@ export function RegisterScreen({
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="john.doe@example.com"
+                placeholder="you@example.com"
                 className="w-full bg-[#040813] text-[#eee] placeholder:text-[#6e6e6a] border border-[#6b5220] focus:border-[#f1ca63] rounded-xl py-2.5 px-3 text-xs outline-none transition-all"
               />
             </div>

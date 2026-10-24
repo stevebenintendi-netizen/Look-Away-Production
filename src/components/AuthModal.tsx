@@ -260,7 +260,7 @@ export function AuthModal({
                       required
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      placeholder="john.doe@example.com"
+                      placeholder="you@example.com"
                       className="w-full gold-input has-left-icon text-xs sm:text-sm font-medium py-3"
                       style={{ paddingLeft: '2.85rem', paddingRight: '1rem' }}
                     />
